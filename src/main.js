@@ -20,11 +20,11 @@ module.exports.loop = errorMapper.errorMapper(() => {
             Game.notify(`User ${username} spotted in room ${roomName}`);
         }
 
+
         if (Game.rooms[roomName].energyAvailable == Game.rooms[roomName].energyCapacityAvailable) {
             Game.rooms[roomName].memory.spawnReady = true;
         } else {
             Game.rooms[roomName].memory.spawnReady = false;
-
         }
 
     }

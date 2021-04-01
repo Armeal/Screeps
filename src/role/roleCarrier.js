@@ -48,29 +48,11 @@ var roleCarrier = {
                 }
 
             });
-            if (!target) {
-                var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
-                    filter: (resource) => {
-                        return resource.amount > creep.store.getFreeCapacity;
-                    }
-                });
 
-                if (target) {
-                    if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
-                        creepUtils.domoveTo(creep, target);
-                    }
-                } else {
-                    var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
-                    if (target) {
-                        if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
-                            creepUtils.domoveTo(creep, target);
-                        }
-                    }
-                }
+            if (target) {
                 if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creepUtils.domoveTo(creep, target);
                 }
-
             } else {
                 var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
                     filter: (resource) => {
@@ -88,6 +70,27 @@ var roleCarrier = {
                         if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                             creepUtils.domoveTo(creep, target);
                         }
+                    }
+                }
+
+            }
+
+        } else {
+            var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                filter: (resource) => {
+                    return resource.amount > creep.store.getFreeCapacity;
+                }
+            });
+
+            if (target) {
+                if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
+                    creepUtils.domoveTo(creep, target);
+                }
+            } else {
+                var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+                if (target) {
+                    if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
+                        creepUtils.domoveTo(creep, target);
                     }
                 }
             }
