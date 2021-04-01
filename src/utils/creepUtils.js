@@ -14,22 +14,17 @@ var creepUtils = {
         });
             if(target){
                 return target;
-
-            }
-
-            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == 'spawn'  && 
-                            structure.store[RESOURCE_ENERGY]>=300);
+            }else{
+                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == 'spawn'  && 
+                                structure.store[RESOURCE_ENERGY]>=300);
+                    }
+            });
+                if(target){
+                    return target;
                 }
-        });
-            if(target){
-                return target;
-
             }
-
- 
-
         }
 
     },

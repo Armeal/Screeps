@@ -8,9 +8,6 @@ var roleBuilder = {
             creep.memory.role = 'repairer';
         }
 
-        if(creep.room.memory.spawnReady == false){
-            return;
-        }
 
         if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.building = false;
@@ -30,6 +27,9 @@ var roleBuilder = {
                 }
             }
         }else {
+            if(creep.room.memory.spawnReady == false){
+                return;
+            }
             var struction = creepUtils.findResourceFromStorge(creep);
             if(creep.withdraw(struction, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creepUtils.domoveTo(creep,struction);

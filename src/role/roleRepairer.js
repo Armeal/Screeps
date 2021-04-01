@@ -5,9 +5,7 @@ var roleRepairer = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
-        if(creep.room.memory.spawnReady == false){
-            return;
-        }
+
 
         if(creep.memory.repairering && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.repairering = false;
@@ -34,6 +32,9 @@ var roleRepairer = {
             }
             
         }else {
+            if(creep.room.memory.spawnReady == false){
+                return;
+            }
             var struction = creepUtils.findResourceFromStorge(creep);
             if(creep.withdraw(struction, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creepUtils.domoveTo(creep,struction);
