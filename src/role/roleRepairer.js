@@ -5,6 +5,10 @@ var roleRepairer = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
+        if(creep.room.memory.spawnReady == false){
+            return;
+        }
+
         if(creep.memory.repairering && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.repairering = false;
             creep.say('🔄 take');

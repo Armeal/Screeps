@@ -35,6 +35,7 @@ var structionSpawn = {
         console.log('repairers: ' + builders.length);
 
 
+
         if(starters <=2 && (harvesters.length < 1 || carriers.length < 1) ){
             var newName = 'Starter' + Game.time;
             spawn.spawnCreep([WORK,CARRY,MOVE], newName, 
@@ -44,14 +45,14 @@ var structionSpawn = {
 
         if(spawn.room.find(FIND_HOSTILE_CREEPS).length>0) {
             var newName = 'Defender' + Game.time;
-            spawn.spawnCreep([ATTACK,ATTACK,MOVE], newName, 
+            spawn.spawnCreep([TOUGH,TOUGH,ATTACK,ATTACK,MOVE,MOVE], newName, 
                 {memory: {role: 'defender'}});
             return;
         }
 
         if(carriers.length < harvesters.length) {
             var newName = 'Carrier' + Game.time;
-            spawn.spawnCreep([CARRY,CARRY,MOVE], newName, 
+            spawn.spawnCreep([CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'carrier'}});
             return;
         }
@@ -61,33 +62,43 @@ var structionSpawn = {
     
         if(harvesters.length < spawn.room.memory.sourceCount) {
             var newName = 'Harvester' + Game.time;
-            if(spawn.spawnCreep([WORK,WORK,WORK,WORK,WORK,MOVE,MOVE]
-                , newName
-                , {memory: {role: 'harvester'}}
-                ) === ERR_NOT_ENOUGH_ENERGY){
-            spawn.spawnCreep([WORK,WORK,WORK,MOVE]
-                , newName
-                , {memory: {role: 'harvester'}});}
+            var part = [];
+            for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/150 && i<6; i++){
+                part.push(WORK,MOVE);
+            }
+            spawn.spawnCreep(part, newName, {memory: {role: 'harvester'}});
             return;
         }
     
-        if(starters.length < 1 && upgraders.length <= 2) {
+        if(starters.length < 1 && upgraders.length < spawn.room.memory.sourceCount && creep.room.memory.spawnReady == true) {
             var newName = 'upgrader' + Game.time;
-            spawn.spawnCreep([WORK,CARRY,MOVE], newName, 
+            var part = [];
+            for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/200 ; i++){
+                part.push(WORK,CARRY,MOVE);
+            }
+            spawn.spawnCreep(part, newName, 
                 {memory: {role: 'upgrader'}});
             return;
         }
 
-        if(starters.length < 1 && builders.length <= 2) {
+        if(starters.length < 1 && builders.length <= spawn.room.find(FIND_MY_CONSTRUCTION_SITES).length && creep.room.memory.spawnReady == true) {
             var newName = 'builder' + Game.time;
-            spawn.spawnCreep([WORK,CARRY,MOVE], newName, 
+            var part = [];
+            for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/200 ; i++){
+                part.push(WORK,CARRY,MOVE);
+            }
+            spawn.spawnCreep(part, newName, 
                 {memory: {role: 'builder'}});
             return;
         }
     
-        if(starters.length < 1 && repairers.length < 1) {
+        if(starters.length < 1 && repairers.length < spawn.room.memory.sourceCount && creep.room.memory.spawnReady == true) {
             var newName = 'repairer' + Game.time;
-            spawn.spawnCreep([WORK,CARRY,MOVE], newName, 
+            var part = [];
+            for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/200 ; i++){
+                part.push(WORK,CARRY,MOVE);
+            }
+            spawn.spawnCreep(part, newName, 
                 {memory: {role: 'repairer'}});
             return;
         }

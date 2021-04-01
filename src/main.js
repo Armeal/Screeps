@@ -7,8 +7,8 @@ var roleDefender = require('./role/roleDefenser')
 var roleRepairer = require('./role/roleRepairer')
 var structionSpawn = require('./struction/structionSpawn');
 var structionTown = require('./struction/structionTower');
-
-module.exports.loop = function () {
+var errorMapper = require('./errorMapper');
+module.exports.loop = errorMapper.errorMapper(() => {
 
     //检查房间内是否有敌人
     for(var roomName in Game.rooms){
@@ -19,8 +19,12 @@ module.exports.loop = function () {
         Game.notify(`User ${username} spotted in room ${roomName}`);
         }
     
-        
-    Game.rooms[roomName].memory.sourceToken = []
+    if(Game.rooms[roomName].energyAvailable == Game.rooms[roomName].energyCapacityAvailable){
+        Game.rooms[roomName].memory.spawnReady = true;
+    }else{
+        Game.rooms[roomName].memory.spawnReady = false;
+
+    }
 
     }
 
@@ -71,4 +75,8 @@ module.exports.loop = function () {
         
     }
 
-}
+    if(Game.cpu.bucket == 10000) {
+        Game.cpu.generatePixel();
+    }
+
+})

@@ -3,6 +3,10 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if(creep.room.memory.spawnReady == false){
+            return;
+        }
+
 	    if(creep.store[RESOURCE_ENERGY] == 0) {
             var struction = creepUtils.findResourceFromStorge(creep);
             if(creep.withdraw(struction, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

@@ -4,6 +4,13 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if(creep.room.find(FIND_MY_CONSTRUCTION_SITES).length == 0){
+            creep.memory.role = 'repairer';
+        }
+
+        if(creep.room.memory.spawnReady == false){
+            return;
+        }
 
         if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.building = false;
