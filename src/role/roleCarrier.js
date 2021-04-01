@@ -48,6 +48,14 @@ var roleCarrier = {
                 }
 
             });
+            if(!target){
+                var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+                if (target) {
+                    if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
+                        creepUtils.domoveTo(creep, target);
+                    }
+                }
+            }
             if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creepUtils.domoveTo(creep, target);
             }
