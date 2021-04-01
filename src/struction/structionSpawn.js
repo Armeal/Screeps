@@ -7,12 +7,13 @@ var structionSpawn = {
 
         var harvesters = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'harvester');
         
-        var i =0;
+        var sourceCount = spawn.room.memory.sourceCount;
+        var i = sourceCount - 1;
         //给收割者分配资源，防止多个收割者在同一个资源点工作。
         for(var name in harvesters){
             var harvester = harvesters[name];
             harvester.memory.target = spawn.room.find(FIND_SOURCES)[i].id;
-            i++;
+            i--;
             
         }
         console.log('Harvesters: ' + harvesters.length);
@@ -49,17 +50,17 @@ var structionSpawn = {
             return;
         }
 
-        if(carriers.length < harvesters.length) {
+        if(carriers.length <= harvesters.length) {
             var newName = 'Carrier' + Game.time;
             spawn.spawnCreep([CARRY,CARRY,CARRY,MOVE,MOVE,MOVE], newName, 
                 {memory: {role: 'carrier'}});
             return;
         }
-        if(!spawn.room.memory.sourceCount){
-            spawn.room.memory.sourceCount = spawn.room.find(FIND_SOURCES).length;
+        if(!sourceCount){
+            sourceCount = spawn.room.find(FIND_SOURCES).length;
         }
     
-        if(harvesters.length < spawn.room.memory.sourceCount) {
+        if(harvesters.length < sourceCount) {
             var newName = 'Harvester' + Game.time;
             var part = [];
             for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/150 && i<6; i++){
@@ -69,7 +70,7 @@ var structionSpawn = {
             return;
         }
     
-        if(starters.length < 1 && upgraders.length < spawn.room.memory.sourceCount && spawn.room.memory.spawnReady == true) {
+        if(starters.length < 1 && upgraders.length < sourceCount && spawn.room.memory.spawnReady == true) {
             var newName = 'upgrader' + Game.time;
             var part = [];
             for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/200 ; i++){
@@ -80,7 +81,7 @@ var structionSpawn = {
             return;
         }
 
-        if(starters.length < 1 && builders.length < spawn.room.memory.sourceCount && spawn.room.memory.spawnReady == true) {
+        if(starters.length < 1 && builders.length < sourceCount && spawn.room.memory.spawnReady == true) {
             var newName = 'builder' + Game.time;
             var part = [];
             for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/200 ; i++){
@@ -91,7 +92,7 @@ var structionSpawn = {
             return;
         }
     
-        if(starters.length < 1 && repairers.length < spawn.room.memory.sourceCount && spawn.room.memory.spawnReady == true) {
+        if(starters.length < 1 && repairers.length < sourceCount && spawn.room.memory.spawnReady == true) {
             var newName = 'repairer' + Game.time;
             var part = [];
             for(var i = 1 ; i <= spawn.room.energyCapacityAvailable/200 ; i++){

@@ -14,7 +14,7 @@ var roleCarrier = {
         }
 
         if (creep.memory.ready) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == 'spawn' ||
@@ -22,20 +22,20 @@ var roleCarrier = {
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
-            if (targets.length > 0) {
-                if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creepUtils.domoveTo(creep, targets[0]);
+            if (target) {
+                if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creepUtils.domoveTo(creep, target);
                 }
             } else {
-                var targets = creep.room.find(FIND_STRUCTURES, {
+                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == 'container') &&
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                     }
                 });
-                if (targets.length > 0) {
-                    if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creepUtils.domoveTo(creep, targets[0]);
+                if (target) {
+                    if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creepUtils.domoveTo(creep, target);
                     }
                 }
 
@@ -49,7 +49,9 @@ var roleCarrier = {
 
             });
             if(!target){
-                var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+                var resources = creep.room.find(FIND_DROPPED_RESOURCES);
+                resources.sort((a,b) => b.amount - a.amount);
+                var target = resources[0];
                 if (target) {
                     if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                         creepUtils.domoveTo(creep, target);
@@ -61,8 +63,9 @@ var roleCarrier = {
             }
 
         } else {
-            var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
-            if (target) {
+            var resources = creep.room.find(FIND_DROPPED_RESOURCES);
+            resources.sort((a,b) => b.amount - a.amount);
+            var target = resources[0];            if (target) {
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creepUtils.domoveTo(creep, target);
                 }

@@ -8,8 +8,7 @@ var creepUtils = {
         }else{
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == 'container'  && 
-                            structure.store[RESOURCE_ENERGY]>0);
+                    return (structure.structureType == 'container' );
                 }
         });
             if(target){
