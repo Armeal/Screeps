@@ -2,7 +2,7 @@ var creepUtils = {
 
     findResourceFromStorge: function (creep) {
         var room = creep.room;
-        if (room.storage && room.storage.store[RESOURCE_ENERGY] > 100) {
+        if (room.storage && room.storage.store[RESOURCE_ENERGY] > creep.store.getFreeCapacity) {
             return room.storage;
 
         } else {
@@ -16,7 +16,7 @@ var creepUtils = {
                 var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == 'container' &&
-                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > 100);
+                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > creep.store.getFreeCapacity);
                     }
                 });
 
@@ -47,9 +47,10 @@ var creepUtils = {
     },
 
     domoveTo: function (creep, target) {
-        if (creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } }, { noPathFinding: true }) == ERR_NOT_FOUND) {
-            creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
-        }
+        creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+        // if (creep.moveTo(target, { visualizePathStyle: { stroke: '#ffaa00' } }, { noPathFinding: true }) == ERR_NOT_FOUND) {
+        //     creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+        // }
     }
 };
 

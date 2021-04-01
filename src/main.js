@@ -8,6 +8,7 @@ var roleRepairer = require('./role/roleRepairer')
 var structionSpawn = require('./struction/structionSpawn');
 var structionTown = require('./struction/structionTower');
 var errorMapper = require('./errorMapper');
+require('./utils/moveOPT')
 module.exports.loop = errorMapper.errorMapper(() => {
 
     //检查房间内是否有敌人
