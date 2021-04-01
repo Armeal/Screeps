@@ -48,10 +48,13 @@ var roleCarrier = {
                 }
 
             });
-            if(!target){
-                var resources = creep.room.find(FIND_DROPPED_RESOURCES);
-                resources.sort((a,b) => b.amount - a.amount);
-                var target = resources[0];
+            if (!target) {
+                var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                    filter: (resource) => {
+                        return resource.amount > 300;
+                    }
+                });
+
                 if (target) {
                     if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                         creepUtils.domoveTo(creep, target);
@@ -63,9 +66,13 @@ var roleCarrier = {
             }
 
         } else {
-            var resources = creep.room.find(FIND_DROPPED_RESOURCES);
-            resources.sort((a,b) => b.amount - a.amount);
-            var target = resources[0];            if (target) {
+            var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                filter: (resource) => {
+                    return resource.amount > 300;
+                }
+            });
+
+            if (target) {
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creepUtils.domoveTo(creep, target);
                 }
