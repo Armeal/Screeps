@@ -44,7 +44,8 @@ var roleCarrier = {
         } else if (creep.room.memory.spawnReady == false) {
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == 'container') &&
+                    return (structure.structureType == 'container'||
+                    structure.structureType == STRUCTURE_STORAGE) &&
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 100;
                 }
 
