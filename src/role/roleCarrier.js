@@ -18,7 +18,8 @@ var roleCarrier = {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == 'spawn' ||
-                        structure.structureType == STRUCTURE_TOWER) &&
+                        structure.structureType == STRUCTURE_TOWER||
+                        structure.structureType == STRUCTURE_STORAGE) &&
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
