@@ -56,10 +56,9 @@ var roleCarrier = {
             } else {
                 var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
                     filter: (resource) => {
-                        return resource.amount > creep.store.getFreeCapacity;
+                        return resource.amount > creep.store.getFreeCapacity(RESOURCE_ENERGY);
                     }
                 });
-
                 if (target) {
                     if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                         creepUtils.domoveTo(creep, target);
@@ -78,10 +77,9 @@ var roleCarrier = {
         } else {
             var target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
                 filter: (resource) => {
-                    return resource.amount > creep.store.getFreeCapacity;
+                    return resource.amount > creep.store.getFreeCapacity();
                 }
             });
-
             if (target) {
                 if (creep.pickup(target) == ERR_NOT_IN_RANGE) {
                     creepUtils.domoveTo(creep, target);

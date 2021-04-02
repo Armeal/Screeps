@@ -5,38 +5,34 @@ var structionSpawn = {
 
         if (spawn.spawning == null && spawn.store.getCapacity(RESOURCE_ENERGY) > 200) {
 
-            var harvesters = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'harvester');
+
+            var harvesters = 0;
+            var carriers = 0;
+            var starters = 0;
+            var upgraders = 0;
+            var builders = 0;
+            var repairers = 0;
+
+            var creeps = spawn.room.find(FIND_MY_CREEPS);
+            for (var name in creeps) {
+                if (creeps[name].memory.role == 'carrier') {
+                    carriers++;
+                } else if (creeps[name].memory.role == 'harvester') {
+                    harvesters++;
+                } else if (creeps[name].memory.role == 'upgrader') {
+                    upgraders++;
+                } else if (creeps[name].memory.role == 'builder') {
+                    builders++;
+                } else if (creeps[name].memory.role == 'repairer') {
+                    repairers++;
+                } else if (creeps[name].memory.role == 'starter') {
+                    starters++;
+                }
+            }
 
             var sourceCount = spawn.room.memory.sourceCount;
-            var i = sourceCount - 1;
-            //给收割者分配资源，防止多个收割者在同一个资源点工作。
-            for (var name in harvesters) {
-                var harvester = harvesters[name];
-                harvester.memory.target = spawn.room.find(FIND_SOURCES)[i].id;
-                i--;
 
-            }
-            console.log('Harvesters: ' + harvesters.length);
-
-            //TODO优化成一次遍历
-            var carriers = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'carrier');
-            console.log('carriers: ' + carriers.length);
-
-            var starters = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'starter');
-            console.log('starters: ' + starters.length);
-
-            var upgraders = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'upgrader');
-            console.log('upgraders: ' + upgraders.length);
-
-            var builders = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'builder');
-            console.log('builders: ' + builders.length);
-
-            var repairers = _.filter(spawn.room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == 'repairer');
-            console.log('repairers: ' + builders.length);
-
-
-
-            if (starters <= 2 && (harvesters.length < 1 || carriers.length < 1)) {
+            if (starters <= 2 && (harvesters < 1 || carriers < 1)) {
                 var newName = 'Starter' + Game.time;
                 spawn.spawnCreep([WORK, CARRY, MOVE], newName,
                     { memory: { role: 'starter' } });
@@ -56,7 +52,7 @@ var structionSpawn = {
             }
 
 
-            if (carriers.length < harvesters.length * 2) {
+            if (carriers < sourceCount * 2) {
                 var newName = 'Carrier' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 100; i++) {
@@ -68,17 +64,28 @@ var structionSpawn = {
             }
 
 
-            if (harvesters.length < sourceCount) {
+            if (harvesters < sourceCount) {
                 var newName = 'Harvester' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 150 && i < 6; i++) {
                     part.push(WORK, MOVE);
                 }
-                spawn.spawnCreep(part, newName, { memory: { role: 'harvester' } });
+
+                var sourceTakers =  Memory.sourceTakers;
+                var sourceTakers =  sourceTakers.filter((object)=>{
+                    console.log(object.taker);
+                    return object.taker == "";
+                });
+                var target = sourceTakers[0];
+                if(spawn.spawnCreep(part, newName, { memory: { role: 'harvester' , target : target.sourceId} }) == 0){
+                    target.taker = newName;
+                    Memory.sourceTakers.splice(Memory.sourceTakers.indexOf(target),1,target);
+                };
+
                 return;
             }
 
-            if (starters.length < 1 && upgraders.length < sourceCount && spawn.room.memory.spawnReady == true) {
+            if (spawn.room.memory.spawnReady == true && starters < 1 && upgraders < sourceCount) {
                 var newName = 'upgrader' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 200; i++) {
@@ -89,7 +96,7 @@ var structionSpawn = {
                 return;
             }
 
-            if (starters.length < 1 && builders.length < sourceCount && spawn.room.memory.spawnReady == true) {
+            if (spawn.room.memory.spawnReady == true && starters < 1 && builders < sourceCount && spawn.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
                 var newName = 'builder' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 200; i++) {
@@ -100,7 +107,7 @@ var structionSpawn = {
                 return;
             }
 
-            if (starters.length < 1 && repairers.length < sourceCount && spawn.room.memory.spawnReady == true) {
+            if (spawn.room.memory.spawnReady == true && starters < 1 && repairers < sourceCount) {
                 var newName = 'repairer' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 200; i++) {

@@ -11,8 +11,9 @@ var errorMapper = require('./errorMapper');
 require('./utils/moveOPT')
 module.exports.loop = errorMapper.errorMapper(() => {
 
-    //检查房间内是否有敌人
+
     for (var roomName in Game.rooms) {
+        //检查房间内是否有敌人
         var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
         if (hostiles.length > 0) {
             var username = hostiles[0].owner.username;
@@ -20,18 +21,56 @@ module.exports.loop = errorMapper.errorMapper(() => {
             Game.notify(`User ${username} spotted in room ${roomName}`);
         }
 
-
+        //检查房间内spawn能量是否充足
         if (Game.rooms[roomName].energyAvailable == Game.rooms[roomName].energyCapacityAvailable) {
             Game.rooms[roomName].memory.spawnReady = true;
         } else {
             Game.rooms[roomName].memory.spawnReady = false;
         }
 
+
+        var init  = Game.rooms[roomName].memory.init;
+        if (!init) {
+            var sources = Game.rooms[roomName].find(FIND_SOURCES);
+            for (var i = 0; i < sources.length; i++) {
+                var sourceTaker = {
+                    sourceId: sources[i].id,
+                    taker: ''
+                };
+                var sourceTakers = Memory.sourceTakers;
+                if (sourceTakers) {               
+                    if(!sourceTakers.includes(sourceTaker)){
+                        sourceTakers.push(sourceTaker);
+                    }
+                    Memory.sourceTakers = sourceTakers;
+                } else {
+                    var arr = new Array();
+                    arr.push(sourceTaker);
+                    Memory.sourceTakers = arr;
+                }
+            }
+            Game.rooms[roomName].memory.init = true;
+        }
+
     }
+
+
 
     //清理死亡creep的内存
     for (var name in Memory.creeps) {
-        if (!Game.creeps[name]) {
+        if (!Game.creeps[name]) {         
+            var role = Memory.creeps[name].role;
+            if(role == 'harvester'){
+                var sourceTaker = {
+                    sourceId: Memory.creeps[name].target,
+                    taker: name
+                }
+                var cleaner = {
+                    sourceId: Memory.creeps[name].target,
+                    taker: ''
+                }
+                Memory.sourceTakers.splice(Memory.sourceTakers.indexOf(sourceTaker),1,cleaner);
+            }
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }
