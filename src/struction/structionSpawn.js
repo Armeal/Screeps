@@ -74,14 +74,13 @@ var structionSpawn = {
                 var sourceTakers =  Memory.sourceTakers;
                 var sourceTakers =  sourceTakers.filter((object)=>{
                     console.log(object.taker);
-                    return object.taker == "";
+                    return object.taker == "" && Game.getObjectById(object.sourceId).room.name == spawn.room.name;
                 });
                 var target = sourceTakers[0];
                 if(spawn.spawnCreep(part, newName, { memory: { role: 'harvester' , target : target.sourceId} }) == 0){
                     target.taker = newName;
                     Memory.sourceTakers.splice(Memory.sourceTakers.indexOf(target),1,target);
                 };
-
                 return;
             }
 
