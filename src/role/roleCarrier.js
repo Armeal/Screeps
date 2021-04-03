@@ -14,15 +14,23 @@ var roleCarrier = {
         }
 
         if (creep.memory.ready) {
-            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == 'spawn' ||
-                        structure.structureType == STRUCTURE_TOWER||
-                        structure.structureType == STRUCTURE_STORAGE) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
+            if (creep.room.memory.spawnReady == false) {
+                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_EXTENSION ||
+                            structure.structureType == 'spawn') &&
+                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    }
+                });
+            } else {
+                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_TOWER ||
+                            structure.structureType == STRUCTURE_STORAGE) &&
+                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    }
+                });
+            }
             if (target) {
                 if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creepUtils.domoveTo(creep, target);
@@ -44,8 +52,8 @@ var roleCarrier = {
         } else if (creep.room.memory.spawnReady == false) {
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == 'container'||
-                    structure.structureType == STRUCTURE_STORAGE) &&
+                    return (structure.structureType == 'container' ||
+                        structure.structureType == STRUCTURE_STORAGE) &&
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 100;
                 }
 
