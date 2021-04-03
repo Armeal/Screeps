@@ -1,9 +1,13 @@
 var creepUtils = {
 
     findResourceFromStorge: function (creep) {
-        var room = creep.room;
-        if (room.storage && room.storage.store[RESOURCE_ENERGY] > creep.store.getFreeCapacity) {
-            return room.storage;
+        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_STORAGE);
+            }
+        });
+        if (target) {
+            return target;
 
         } else {
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -15,7 +19,7 @@ var creepUtils = {
                 var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == 'container' &&
-                        structure.store[RESOURCE_ENERGY] > creep.store.getFreeCapacity());
+                            structure.store[RESOURCE_ENERGY] > creep.store.getFreeCapacity());
                     }
                 });
                 return target;
