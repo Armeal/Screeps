@@ -18,7 +18,7 @@ module.exports.loop = errorMapper.errorMapper(() => {
         if (hostiles.length > 0) {
             var username = hostiles[0].owner.username;
             console.log(`User ${username} spotted in room ${roomName}`);
-            Game.notify(`User ${username} spotted in room ${roomName}`);
+            //Game.notify(`User ${username} spotted in room ${roomName}`);
         }
 
         //检查房间内spawn能量是否充足
@@ -29,28 +29,6 @@ module.exports.loop = errorMapper.errorMapper(() => {
         }
 
 
-        var init  = Game.rooms[roomName].memory.init;
-        if (!init) {
-            var sources = Game.rooms[roomName].find(FIND_SOURCES);
-            for (var i = 0; i < sources.length; i++) {
-                var sourceTaker = {
-                    sourceId: sources[i].id,
-                    taker: ''
-                };
-                var sourceTakers = Memory.sourceTakers;
-                if (sourceTakers) {               
-                    if(!sourceTakers.includes(sourceTaker)){
-                        sourceTakers.push(sourceTaker);
-                    }
-                    Memory.sourceTakers = sourceTakers;
-                } else {
-                    var arr = new Array();
-                    arr.push(sourceTaker);
-                    Memory.sourceTakers = arr;
-                }
-            }
-            Game.rooms[roomName].memory.init = true;
-        }
 
     }
 
@@ -59,18 +37,6 @@ module.exports.loop = errorMapper.errorMapper(() => {
     //清理死亡creep的内存
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {         
-            var role = Memory.creeps[name].role;
-            if(role == 'harvester'){
-                var sourceTaker = {
-                    sourceId: Memory.creeps[name].target,
-                    taker: name
-                }
-                var cleaner = {
-                    sourceId: Memory.creeps[name].target,
-                    taker: ''
-                }
-                Memory.sourceTakers.splice(Memory.sourceTakers.indexOf(sourceTaker),1,cleaner);
-            }
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         }

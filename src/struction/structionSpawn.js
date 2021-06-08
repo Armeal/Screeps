@@ -49,10 +49,11 @@ var structionSpawn = {
 
             if (!sourceCount) {
                 sourceCount = spawn.room.find(FIND_SOURCES).length;
+                spawn.room.memory.sourceCount = sourceCount;
             }
 
 
-            if (carriers < sourceCount * 2) {
+            if (carriers < sourceCount ) {
                 var newName = 'Carrier' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 100; i++) {
@@ -70,21 +71,11 @@ var structionSpawn = {
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 150 && i < 6; i++) {
                     part.push(WORK, MOVE);
                 }
-
-                var sourceTakers =  Memory.sourceTakers;
-                var sourceTakers =  sourceTakers.filter((object)=>{
-                    console.log(object.taker);
-                    return object.taker == "" && Game.getObjectById(object.sourceId).room.name == spawn.room.name;
-                });
-                var target = sourceTakers[0];
-                if(spawn.spawnCreep(part, newName, { memory: { role: 'harvester' , target : target.sourceId} }) == 0){
-                    target.taker = newName;
-                    Memory.sourceTakers.splice(Memory.sourceTakers.indexOf(target),1,target);
-                };
+                if(spawn.spawnCreep(part, newName, { memory: { role: 'harvester' } }) == 0)
                 return;
             }
 
-            if (spawn.room.memory.spawnReady == true && starters < 1 && upgraders < sourceCount) {
+            if (spawn.room.memory.spawnReady == true  && upgraders < sourceCount) {
                 var newName = 'upgrader' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 200; i++) {
@@ -95,7 +86,7 @@ var structionSpawn = {
                 return;
             }
 
-            if (spawn.room.memory.spawnReady == true && starters < 1 && builders < sourceCount && spawn.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
+            if (spawn.room.memory.spawnReady == true  && builders < sourceCount && spawn.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
                 var newName = 'builder' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 200; i++) {
@@ -106,7 +97,7 @@ var structionSpawn = {
                 return;
             }
 
-            if (spawn.room.memory.spawnReady == true && starters < 1 && repairers < sourceCount) {
+            if (spawn.room.memory.spawnReady == true  && repairers < sourceCount) {
                 var newName = 'repairer' + Game.time;
                 var part = [];
                 for (var i = 1; i <= spawn.room.energyCapacityAvailable / 200; i++) {

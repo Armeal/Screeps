@@ -33,6 +33,16 @@ var roleStarter = {
             }
         }
         else {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == 'Ruin')
+                }
+            });
+            if (target) {
+                if (creep.withdraw(target) == ERR_NOT_IN_RANGE) {
+                    creepUtils.domoveTo(creep, target)
+                }
+            }
             var source = creep.pos.findClosestByPath(FIND_SOURCES);
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creepUtils.domoveTo(creep, source)
