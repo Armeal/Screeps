@@ -41,7 +41,7 @@ var structionSpawn = {
 
             if (spawn.room.find(FIND_HOSTILE_CREEPS).length > 0) {
                 var newName = 'Defender' + Game.time;
-                spawn.spawnCreep([TOUGH, TOUGH, ATTACK, ATTACK, MOVE, MOVE], newName,
+                spawn.spawnCreep([TOUGH, TOUGH, MOVE, MOVE, ATTACK, ATTACK], newName,
                     { memory: { role: 'defender' } });
                 return;
             }

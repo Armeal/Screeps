@@ -26,7 +26,7 @@ var roleCarrier = {
                 var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_TOWER ||
-                            structure.structureType == STRUCTURE_STORAGE) &&
+                            structure.structureType == 'container') &&
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                     }
                 });
@@ -38,7 +38,7 @@ var roleCarrier = {
             } else {
                 var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == 'container') &&
+                        return (structure.structureType == STRUCTURE_STORAGE) &&
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                     }
                 });
@@ -52,8 +52,8 @@ var roleCarrier = {
         } else if (creep.room.memory.spawnReady == false) {
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == 'container' ||
-                        structure.structureType == STRUCTURE_STORAGE) &&
+                    return (structure.structureType == STRUCTURE_STORAGE ||
+                        structure.structureType == 'container') &&
                         structure.store.getUsedCapacity(RESOURCE_ENERGY) > 100;
                 }
 
